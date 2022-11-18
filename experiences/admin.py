@@ -10,6 +10,7 @@ class ExperienceAdmin(admin.ModelAdmin):
     list_display = (
 
         "name",
+        "category",
         "price",
         "start_at",
         "end_at",
