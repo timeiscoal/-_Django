@@ -13,11 +13,12 @@ class CustomUserAdmin(UserAdmin):
         ("프로필",
 
          {"fields": (
-             "username",
+             ("username", "profile_photo"),
              "password",
-             "name",
+             ("name", "gender"),
              "email",
-             "is_host"
+             "is_host",
+             ("language", "currency"),
 
          ),
          },

@@ -30,5 +30,12 @@ class House(models.Model):
         default=True,
     )
 
+    # 집 주인 계정이 삭제되면 같이 삭제.
+    owner = models.ForeignKey(
+        "user.User",
+        on_delete=models.CASCADE,
+
+    )
+
     def __str__(self):
         return self.name
