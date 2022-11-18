@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "user.apps.UserConfig",
     "rooms.apps.RoomsConfig",
     "common.apps.CommonConfig",
+    "experiences.apps.ExperiencesConfig",
 ]
 
 MIDDLEWARE = [
