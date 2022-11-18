@@ -11,6 +11,7 @@ class HouseAdmin(admin.ModelAdmin):
         "description",
         ("address", "price",),
         "pets_allowed",
+        "owner",
     )
 
     list_display = (
