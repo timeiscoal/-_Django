@@ -8,6 +8,7 @@ class HouseAdmin(admin.ModelAdmin):
 
     fields = (
         "name",
+        "category",
         "description",
         ("address", "price",),
         "pets_allowed",
