@@ -73,8 +73,8 @@ class Room(CommonModel):
         on_delete=models.SET_NULL,
     )
 
-    # def __str__(self):
-    #     return self.name
+    def __str__(self):
+        return self.name
 
 
 # 편의 시설
