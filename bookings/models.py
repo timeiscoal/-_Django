@@ -16,6 +16,7 @@ class Booking(CommonModel):
     user = models.ForeignKey(
         "user.User",
         on_delete=models.CASCADE,
+        related_name="bookings",
     )
     # 예약 시 한 개의 방만 가능.
     # 방은 여러개의 예약이 가능.
@@ -24,6 +25,7 @@ class Booking(CommonModel):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
+        related_name="bookings",
     )
     # 체험 예약 또한 마찬가지로 구성.
     experience = models.ForeignKey(
@@ -31,6 +33,7 @@ class Booking(CommonModel):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
+        related_name="bookings",
     )
 
     check_in = models.DateField(

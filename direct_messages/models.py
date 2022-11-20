@@ -29,11 +29,13 @@ class Message(CommonModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        related_name="messages",
     )
 
     chatrooms = models.ForeignKey(
         'direct_messages.ChatRoom',
         on_delete=models.CASCADE,
+        related_name="messages",
     )
 
     def __str__(self) -> str:

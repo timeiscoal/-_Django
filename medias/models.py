@@ -46,6 +46,7 @@ class Video(CommonModel):
     experience = models.OneToOneField(
         "experiences.Experience",
         on_delete=models.CASCADE,
+        related_name="videos",
 
     )
 
