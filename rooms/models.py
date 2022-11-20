@@ -76,6 +76,12 @@ class Room(CommonModel):
     def __str__(self):
         return self.name
 
+    # 22.11.20 추가 total_amenitese
+
+    def total_amenitese(self):
+
+        return self.amenities.count()
+
 
 # 편의 시설
 class Amenity(CommonModel):
