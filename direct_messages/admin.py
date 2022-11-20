@@ -18,7 +18,8 @@ class MessageAdmin(admin.ModelAdmin):
 
     )
 
+    # 22.11.20 해결. username과 name.
     search_fields = (
         "chatrooms__name",
-        # "participants", 추후 구현. 채팅에 참여하는 유저 이름을 검색하면 해당 채팅창이 나오게 구성.
+        "participants__username",
     )
