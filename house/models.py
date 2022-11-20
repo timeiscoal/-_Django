@@ -34,6 +34,7 @@ class House(models.Model):
     owner = models.ForeignKey(
         "user.User",
         on_delete=models.CASCADE,
+        related_name="houses",
 
     )
     category = models.ForeignKey(
@@ -41,6 +42,7 @@ class House(models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
+        related_name="houses",
     )
 
     def __str__(self):

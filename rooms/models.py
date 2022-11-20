@@ -59,11 +59,13 @@ class Room(CommonModel):
     owner = models.ForeignKey(
         "user.User",
         on_delete=models.CASCADE,
+        related_name="rooms",
 
     )
 
     amenities = models.ManyToManyField(
         "rooms.Amenity",
+        related_name="rooms",
 
     )
     category = models.ForeignKey(
@@ -71,13 +73,39 @@ class Room(CommonModel):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
+        related_name="rooms",
     )
 
     def __str__(self):
         return self.name
 
+    # 22.11.20 추가 total_amenitese
+
+    def total_amenitese(self):
+
+        return self.amenities.count()
+
+    def rating(self):
+        count = self.reviews.count()
+        if count == 0:
+            return "No Review"
+        else:
+            total_rating = 0
+
+            # for review in self.reviews.all():
+            #     total_rating += review.rating
+            #     return round(total_rating/count, 2)
+
+            #  22.11.20 refactoring
+            for review in self.reviews.all().values("rating"):
+                total_rating += review["rating"]
+                return round(total_rating / (count), 2)
+
+        return self.reviews.rating
 
 # 편의 시설
+
+
 class Amenity(CommonModel):
 
     name = models.CharField(

@@ -9,12 +9,14 @@ class Review(CommonModel):
     user = models.ForeignKey(
         "user.User",
         on_delete=models.CASCADE,
+        related_name="reviews",
     )
     room = models.ForeignKey(
         "rooms.Room",
         null=True,
         blank=True,
         on_delete=models.CASCADE,
+        related_name="reviews",
 
     )
     experience = models.ForeignKey(
@@ -22,6 +24,7 @@ class Review(CommonModel):
         null=True,
         blank=True,
         on_delete=models.CASCADE,
+        related_name="reviews",
     )
 
     payload = models.TextField(
