@@ -17,32 +17,13 @@ class Experience(CommonModel):
         choices=CountryChoices.choices,
     )
 
-    city = models.CharField(
-        max_length=100,
-        default="서울",
-    )
-    name = models.CharField(
-        max_length=200,
-
-    )
-    host = models.ForeignKey(
-        "user.User",
-        on_delete=models.CASCADE,
-    )
-    price = models.PositiveIntegerField(
-
-    )
-    address = models.CharField(
-        max_length=250,
-    )
-    start_at = models.TimeField(
-        help_text="영업 시작 시간"
-
-    )
-    end_at = models.TimeField(
-        help_text="영업 종료 시간"
-
-    )
+    city = models.CharField(max_length=100, default="서울",)
+    name = models.CharField(max_length=200,)
+    host = models.ForeignKey("user.User", on_delete=models.CASCADE,)
+    price = models.PositiveIntegerField()
+    address = models.CharField(max_length=250,)
+    start_at = models.TimeField(help_text="영업 시작 시간")
+    end_at = models.TimeField(help_text="영업 종료 시간")
     description = models.TextField(
 
     )
@@ -65,15 +46,9 @@ class Experience(CommonModel):
 # 특전
 class Perk(CommonModel):
 
-    name = models.CharField(
-        max_length=100,
-    )
-    details = models.CharField(
-        max_length=250,
-    )
-    explanation = models.TextField(
-
-    )
+    name = models.CharField(max_length=100,)
+    details = models.CharField(max_length=250,)
+    explanation = models.TextField()
 
     def __str__(self):
         return self.name

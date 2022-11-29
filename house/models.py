@@ -12,18 +12,10 @@ class House(models.Model):
 
     '''   House model Definition   '''
 
-    name = models.CharField(
-        max_length=100,
-    )
-    price = models.PositiveIntegerField(
-        help_text="하루 이용 금액",
-    )
-    description = models.TextField(
-
-    )
-    address = models.CharField(
-        max_length=150,
-    )
+    name = models.CharField(max_length=100,)
+    price = models.PositiveIntegerField(help_text="하루 이용 금액",)
+    description = models.TextField()
+    address = models.CharField(max_length=150,)
     pets_allowed = models.BooleanField(
         verbose_name="반려동물 동반 가능 여부",
         help_text="반려동물 동반 가능하면 체크하세요.",

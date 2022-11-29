@@ -6,9 +6,7 @@ from common.models import CommonModel
 
 class Wishlist(CommonModel):
 
-    name = models.CharField(
-        max_length=150,
-    )
+    name = models.CharField(max_length=150,)
     rooms = models.ManyToManyField(
         "rooms.Room",
         related_name="wishlists",

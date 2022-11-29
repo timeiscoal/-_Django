@@ -10,12 +10,8 @@ class Category(CommonModel):
         ROOM = ("rooms", "Rooms")
         EXPERIENCE = ("experiences", "Experiences")
 
-    name = models.CharField(
-        max_length=100,
-    )
-    kind = models.CharField(
-        max_length=15,
-    )
+    name = models.CharField(max_length=100,)
+    kind = models.CharField(max_length=15,)
 
     def __str__(self):
         return f"{self.kind.title()}:{self.name}"

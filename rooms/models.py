@@ -31,21 +31,11 @@ class Room(CommonModel):
         max_length=100,
         default="서울",
     )
-    price = models.PositiveIntegerField(
-
-    )
-    rooms = models.PositiveIntegerField(
-
-    )
-    toilets = models.PositiveIntegerField(
-
-    )
-    description = models.TextField(
-
-    )
-    address = models.CharField(
-        max_length=250
-    )
+    price = models.PositiveIntegerField()
+    rooms = models.PositiveIntegerField()
+    toilets = models.PositiveIntegerField()
+    description = models.TextField()
+    address = models.CharField(max_length=250)
 
     pet_friendly = models.BooleanField(
         default=True,
