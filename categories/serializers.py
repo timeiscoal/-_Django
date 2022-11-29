@@ -3,8 +3,7 @@ from .models import Category
 
 
 class CategorySerializer(serializers.Serializer):
-
-    pk = serializers.IntegerField()
-    name = serializers.CharField(required=True)
-    kind = serializers.CharField()
-    created_at = serializers.DateTimeField()
+    class Meta:
+        model = Category
+        fields = ("name", "kind",
+                  )
