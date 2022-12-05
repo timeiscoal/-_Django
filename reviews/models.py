@@ -27,12 +27,8 @@ class Review(CommonModel):
         related_name="reviews",
     )
 
-    payload = models.TextField(
-
-    )
-    rating = models.PositiveIntegerField(
-
-    )
+    payload = models.TextField()
+    rating = models.PositiveIntegerField()
 
     def __str__(self) -> str:
         return f"{self.user} 평점: {self.rating}"

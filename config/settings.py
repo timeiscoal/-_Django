@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
+    # FramWork
+
+    'rest_framework',
+
     # Custom Apps.
 
     'house.apps.HouseConfig',

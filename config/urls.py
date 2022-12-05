@@ -1,6 +1,9 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('categories/', include("categories.urls")),
+    path('rooms/', include("rooms.urls")),
+    path('experiences/', include("experiences.urls")),
 ]
