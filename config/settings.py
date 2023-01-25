@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "bookings.apps.BookingsConfig",
     "medias.apps.MediasConfig",
     "direct_messages.apps.DirectMessagesConfig",
+
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Custom User
 
 AUTH_USER_MODEL = "user.User"
+
+# 파일 저장
+MEDIA_ROOT = "uploads"
+# 유저에게 보여줄 url, 이 url을 통해서 서버에 업로드된 파일들에게 접근 할 수 있게 된다.
+MEDIA_URL = "user-uploads/"
+
+PAGE_SIZE = 3

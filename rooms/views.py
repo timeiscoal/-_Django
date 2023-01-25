@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.conf import settings
 from django.db import transaction
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, NotAuthenticated, ParseError, PermissionDenied
@@ -7,6 +8,8 @@ from rest_framework.views import APIView
 from rooms.models import Amenity, Room
 from categories.models import Category
 from rooms.serializers import AmenitiesSerializer, RoomListSerializer, RoomDetailSerializer, ReviewSerializer
+from medias.serializers import PhotoSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # Create your views here.
 
 # 모든 view function은 request를 받는다.
@@ -56,10 +59,14 @@ class AmenitiesDetail(APIView):
 
 class RoomView(APIView):
 
+    # 읽기 전용 메소드
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get(self, request):
         all_rooms = Room.objects.all()
         serializer = RoomListSerializer(
             all_rooms, many=True, context={"request": request})
+        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -94,12 +101,14 @@ class RoomView(APIView):
                 except Exception:
                     return ParseError("Amenity not found")
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                raise ParseError("")
         else:
             raise NotAuthenticated
 
 
 class RoomDetailView(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, room_id):
         room = Room.objects.get(pk=room_id)
@@ -108,8 +117,8 @@ class RoomDetailView(APIView):
 
     def put(self, request, room_id):
         room = Room.objects.get(pk=room_id)
-        if request.user.is_authenticated:
-            raise NotAuthenticated
+        # if request.user.is_authenticated:
+        #     raise NotAuthenticated permistionclass추가.하면서 주석
         if room.owner != request.user:
             raise PermissionDenied
         serializer = RoomDetailSerializer(
@@ -123,8 +132,8 @@ class RoomDetailView(APIView):
 
     def delete(self, request, room_id):
         room = Room.objects.get(pk=room_id)
-        if not request.user.is_authenticated:
-            raise NotAuthenticated
+        # if not request.user.is_authenticated:
+        #     raise NotAuthenticated
         if room.owner != request.user:
             raise PermissionDenied
         room.delete()
@@ -132,6 +141,8 @@ class RoomDetailView(APIView):
 
 
 class RoomReviews(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, room_id):
 
@@ -142,7 +153,7 @@ class RoomReviews(APIView):
         except ValueError:
             page = 1
 
-        page_size = 3
+        page_size = settings.PAGE_SIZE
         start = (page - 1) * page_size
         end = start + page_size
 
@@ -151,5 +162,34 @@ class RoomReviews(APIView):
             room.reviews.all()[start:end], many=True,)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request, room_id):
-        pass
+    def post(self, request, room_id):
+
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid():
+            review = serializer.save(
+                user=request.user, room=self.get_object(room_id)
+            )
+            serializer = ReviewSerializer(review)
+            return Response(serializer.data)
+
+
+class RoomPhotos(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def post(self, request, room_id):
+        room = Room.objects.get(pk=room_id)
+        # if not request.user.is_authenticated:
+        #     raise NotAuthenticated
+        if request.user != room.owner:
+            raise PermissionDenied
+        serializer = PhotoSerializer(data=request.data)
+        if serializer.is_valid():
+            # 왜 room을 넣어주는 걸까...음... 사진을 어디 방에 넣어줄지가 필요해서 넣는 것이겠지?
+            upload_photo = serializer.save(
+                room=room
+            )
+            serializer = PhotoSerializer(upload_photo)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

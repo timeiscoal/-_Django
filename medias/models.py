@@ -8,7 +8,7 @@ from common.models import CommonModel
 
 class Photo(CommonModel):
 
-    file = models.ImageField(
+    file = models.URLField(
         null=True,
         blank=True,
 
@@ -38,7 +38,7 @@ class Photo(CommonModel):
 
 class Video(CommonModel):
 
-    file = models.FileField(
+    file = models.URLField(
         null=True,
         blank=True,
 
