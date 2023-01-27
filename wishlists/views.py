@@ -11,7 +11,7 @@ from rooms.models import Room
 class WishlistView(APIView):
 
     # 나만 볼 수 있음
-    # 수정사항 추가.
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -36,7 +36,7 @@ class WishListDetailView(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get(self, pk, user):
+    def get_object(self, pk, user):
         try:
             return Wishlist.objects.get(pk=pk, user=user)
         except Wishlist.DoesNotExist:
