@@ -4,6 +4,7 @@ from user.serializers import TinyUserSerializer
 from categories.serializers import CategorySerializer
 from reviews.serializers import ReviewSerializer
 from medias.serializers import PhotoSerializer
+from wishlists.models import Wishlist
 
 
 class AmenitiesSerializer(serializers.ModelSerializer):
@@ -32,6 +33,7 @@ class RoomDetailSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     # 방 데이터를 보여줄 때 역 접근자를 포함하는 것은 좋지 못한 생각일 수 있다. 이유는 리뷰가 한 두개가 아닐때를 생각해보자. 그래서 페이지를 생성하는 방법을 고민해보자. 페이지 네이션.
     reviews = ReviewSerializer(many=True, read_only=True)
+    is_liked = serializers.SerializerMethodField()
 
     def get_rating(self, room):
         return room.rating()
@@ -47,6 +49,12 @@ class RoomDetailSerializer(serializers.ModelSerializer):
     # def get_rating(self, obj):
     #     return obj.rating()
 
+    
+    def get_is_liked(self, obj):
+        request = self.context['request']
+        return Wishlist.objects.filter(user=request.user, rooms__pk=obj.pk).exists()
+
+
     class Meta:
         model = Room
         fields = "__all__"
@@ -58,6 +66,7 @@ class RoomDetailSerializer(serializers.ModelSerializer):
 
 class RoomListSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
+
     rating = serializers.SerializerMethodField()
 
     photos = PhotoSerializer(many=True, read_only=True)
@@ -68,6 +77,8 @@ class RoomListSerializer(serializers.ModelSerializer):
     def get_is_owner(self, obj):
         request = self.context["request"]
         return obj.owner == request.user
+
+
 
     class Meta:
         model = Room

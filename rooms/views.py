@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.db import transaction
+from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, NotAuthenticated, ParseError, PermissionDenied
 from rest_framework import status
@@ -10,6 +11,8 @@ from categories.models import Category
 from rooms.serializers import AmenitiesSerializer, RoomListSerializer, RoomDetailSerializer, ReviewSerializer
 from medias.serializers import PhotoSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from bookings.models import Booking
+from bookings.serializers import PubilcBookingSerializer , CreateRoomBookingSerializer
 # Create your views here.
 
 # 모든 view function은 request를 받는다.
@@ -193,3 +196,43 @@ class RoomPhotos(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# 예약 방
+class RoomBookings(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_object(self,room_id):
+        try:
+            return Room.objects.get(pk=room_id)
+        except:
+            raise NotFound
+
+    def get(self, request, room_id):
+        room = self.get_object(room_id)
+        now = timezone.localtime(timezone.now()).date()
+        booking = Booking.objects.filter(room=room, kind=Booking.BookingKindChoice.ROOM, check_in__gt=now,)
+        serializer = PubilcBookingSerializer(booking, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, room_id):
+        room = self.get_object(room_id)
+        serializer = CreateRoomBookingSerializer(data=request.data)
+        if serializer.is_valid():
+            booking = serializer.save(
+                room=room,
+                user=request.user,
+                kind=Booking.BookingKindChoice.ROOM,
+            )
+            serializer = PubilcBookingSerializer(booking)
+            # check_in = request.data.get("check_in")
+            return Response(serializer.data)
+
+        else:
+            return Response(serializer.errors)
+
+    # def delete(self,request,room_id):
+    #     room = self.get_object(room_id)
+    #     room.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)

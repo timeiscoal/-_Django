@@ -52,5 +52,5 @@ class Booking(CommonModel):
 
     )
 
-    def __str__(self):
-        return self.user
+    # def __str__(self):
+    #     return self.user
