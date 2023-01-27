@@ -38,7 +38,8 @@ class User(AbstractUser):
         default=False,
     )
 
-    profile_photo = models.ImageField(
+    # profile_photo = models.ImageField()
+    profile_photo = models.URLField(
         null=True,
         blank=True,
         help_text="프로필 사진을 추가 해보세요",
