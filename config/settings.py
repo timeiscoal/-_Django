@@ -11,16 +11,32 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import environ
+
+env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# BASE_DIR + ".env" 
+# BASE_DIR = C:\Users\qqchl\Desktop\Django\airbnb
+
+# 아래 방법을 사용하는 것은 실수를 줄이기 위해서 임.
+environ.Env.read_env(os.path.join(BASE_DIR,".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j3dsx^#$pfutlwiz2^_z&b-=$^ry6m-^dk=cuayv*a=m6(a^ie'
+
+SECRET_KEY = env("SECRET_KEY")
+
+print(env("SECRET_KEY"))
+
+# 시크릿키는 장고가 유저에게 제공하는 쿠키나 세션에 서명할 때 사용하는 것임.
+# 이런 것들은 소스코드 안에 있으면 좋지 못하다.
+# 암호화와 복호화때 사용함.
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,6 +58,7 @@ INSTALLED_APPS = [
     # FramWork
 
     'rest_framework',
+    'rest_framework.authtoken',
 
     # Custom Apps.
 
@@ -153,3 +170,15 @@ MEDIA_ROOT = "uploads"
 MEDIA_URL = "user-uploads/"
 
 PAGE_SIZE = 3
+
+
+# 로그인한 유저 확인.
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        # "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "config.permissions.TrustMeBroAutentication",
+        "rest_framework.authentication.TokenAuthentication",
+        "config.permissions.JWTAuthentication",
+    ]
+}

@@ -21,6 +21,7 @@ from bookings.serializers import PubilcBookingSerializer , CreateRoomBookingSeri
 
 
 class Amenities(APIView):
+
     def get(self, request):
         amenities = Amenity.objects.all()
         serializer = AmenitiesSerializer(amenities, many=True)
@@ -38,13 +39,19 @@ class Amenities(APIView):
 
 class AmenitiesDetail(APIView):
 
+    def get_object(self,amenities_pk):
+        try:
+            return Amenity.objects.get(pk=amenities_pk)
+        except Amenity.DoesNotExist:
+            raise NotFound
+
     def get(self, request, amenities_pk):
-        amenities = Amenity.objects.get(pk=amenities_pk)
+        amenities = self.get_object(amenities_pk)
         serializer = AmenitiesSerializer(amenities)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, amenities_pk):
-        amenities = Amenity.objects.get(pk=amenities_pk)
+        amenities = self.get_object(amenities_pk)
         serializer = AmenitiesSerializer(
             amenities, data=request.data, partial=True,)
         if serializer.is_valid():
@@ -55,14 +62,14 @@ class AmenitiesDetail(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, amenities_pk):
-        amenities = Amenity.objects.get(pk=amenities_pk)
+        amenities = self.get_object(amenities_pk)
         amenities.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class RoomView(APIView):
 
-    # 읽기 전용 메소드
+    # 읽기 전용 메소드 / 하지만 생성은 인증된 사용자에게만.
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request):
