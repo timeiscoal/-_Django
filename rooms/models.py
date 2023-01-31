@@ -103,7 +103,8 @@ class Amenity(CommonModel):
     )
     description = models.CharField(
         max_length=150,
-        default="",
+        null=True,
+        blank=True,
     )
 
     def __str__(self) -> str:
